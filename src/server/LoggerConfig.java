@@ -1,19 +1,19 @@
 /*
- * Niveis de Log:
- * - SEVERE: Exibe erros criticos que podem causar falhas na aplicacao.
- *   Exemplo: Erro ao iniciar o servidor, falha na conexao com o cliente.
+ * Logging Levels:
+ * - SEVERE: Displays critical errors that may cause the application to fail.
+ *   Example: Error starting the server, failure connecting to a client.
  *
- * - WARNING: Indica situacoes inesperadas que nao causam falha, mas podem ser um problema.
- *   Exemplo: Nenhum participante disponivel para receber mensagens.
+ * - WARNING: Indicates unexpected situations that do not cause failure but might be problematic.
+ *   Example: No participants available to receive messages.
  *
- * - INFO: Exibe informacoes importantes sobre eventos normais da aplicacao.
- *   Exemplo: Cliente conectado, usuario saiu do chat.
+ * - INFO: Displays important information about normal application events.
+ *   Example: Client connected, user left the chat.
  *
- * - FINE: Detalha eventos uteis para debug durante o desenvolvimento.
- *   Exemplo: Mensagem recebida e enviada, acoes internas do servidor.
+ * - FINE: Details useful events for debugging during development.
+ *   Example: Message received/sent, internal server actions.
  *
- * - ALL: Captura todos os niveis de log, util para depuracao completa.
-*/
+ * - ALL: Captures all log levels, useful for full debugging.
+ */
 package server;
 
 import java.io.File;
@@ -21,35 +21,37 @@ import java.io.IOException;
 import java.util.logging.*;
 
 public class LoggerConfig {
-    // Define o nivel de log para FINE durante o desenvolvimento para capturar logs detalhados.
-    // Para producao, alterar para INFO para reduzir a quantidade de logs.
-    private static final Level NIVEL_LOG = Level.INFO;
+    // Set log level to FINE for development to capture detailed logs.
+    // Change to INFO in production to reduce log verbosity.
+    private static final Level LOG_LEVEL = Level.INFO;
 
     public static void configureLogger(Logger logger) {
-        logger.setUseParentHandlers(false);
+        logger.setUseParentHandlers(false); // Disable default console output
 
-        // Criar diretorio logs se nao existir
+        // Create 'logs' directory if it does not exist
         File logDir = new File("logs");
-        if (!logDir.exists() && logDir.mkdirs()) { System.out.println("DiretOrio 'logs' criado."); }
+        if (!logDir.exists() && logDir.mkdirs()) {
+            System.out.println("Directory 'logs' created.");
+        }
 
-        // Configurar saIda no console
+        // Console output configuration
         ConsoleHandler consoleHandler = new ConsoleHandler();
-        consoleHandler.setLevel(NIVEL_LOG);
+        consoleHandler.setLevel(LOG_LEVEL);
         consoleHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(consoleHandler);
 
         try {
-            // Configurar saIda para arquivo de log
+            // Log file output configuration
             FileHandler fileHandler = new FileHandler("logs/server.log", true);
             fileHandler.setFormatter(new SimpleFormatter());
 
-            // Registra todos os niveis no arquivo de log
+            // Log all levels to the file
             fileHandler.setLevel(Level.ALL);
-
             logger.addHandler(fileHandler);
+
         } catch (IOException e) {
-            System.err.println("Erro ao configurar o logger: " + e.getMessage());
-            logger.log(Level.SEVERE, "Erro ao configurar o logger", e);
+            System.err.println("Error configuring logger: " + e.getMessage());
+            logger.log(Level.SEVERE, "Error configuring logger", e);
         }
     }
 }

@@ -1,160 +1,162 @@
-# Chat em Java com Sockets 🚀
+# Java Chat with Sockets 🚀
 
-## 📌 Sobre o Projeto
+## 📌 About the Project
 
-Este é um sistema de chat desenvolvido em **Java** utilizando **sockets**, permitindo que múltiplos clientes se conectem a um servidor e enviem mensagens entre si em tempo real. A comunicação é feita via **TCP**, garantindo confiabilidade e controle sobre as mensagens enviadas e recebidas.
+This is a chat system developed in **Java** using **sockets**, allowing multiple clients to connect to a server and exchange messages in real time. Communication is handled via **TCP**, ensuring reliability and control over message transmission and delivery.
 
-O projeto implementa um servidor multi-threaded que gerencia as conexões dos clientes e um worker thread ("fofoqueiro") que distribui as mensagens de maneira eficiente.
+The project implements a multi-threaded server that manages client connections and a worker thread (nicknamed "Fofoqueiro", or "gossiper") that efficiently distributes messages.
 
-## 🏗️ Estrutura do Projeto
+## 🏗️ Project Structure
 
 ```
 📂 ChatJavaSockets
 ├── 📂 src
-│   ├── 📂 client        # Implementação do Cliente
-│   │   ├── Cliente.java
-│   ├── 📂 server        # Implementação do Servidor
+│   ├── 📂 client        # Client implementation
+│   │   ├── Client.java
+│   ├── 📂 server        # Server implementation
 │   │   ├── LoggerConfig.java
-│   │   ├── Participante.java
-│   │   ├── ServicoMensagem.java
-│   │   ├── Servidor.java
-├── 📂 bin               # Arquivos compilados
-├── Servidor.jar            # JAR executável do Servidor
-├── Cliente.jar             # JAR executável do Cliente
-└── README.md               # Este arquivo
+│   │   ├── Participant.java
+│   │   ├── MessageService.java
+│   │   ├── ChatServer.java
+├── 📂 bin               # Compiled classes
+├── ChatServer.jar              # Executable JAR for the server
+├── Client.jar              # Executable JAR for the client
+└── README.md               # This file
 ```
 
-## 🎯 Funcionalidades Implementadas
+## 🎯 Implemented Features
 
-✅ **Múltiplas conexões simultâneas** – O servidor aceita vários clientes ao mesmo tempo. 
+✅ **Multiple simultaneous connections** – The server supports multiple clients concurrently.
 
-✅ **Worker Thread ("Fofoqueiro")** – Utiliza um `FixedThreadPool` para distribuir mensagens. 
+✅ **Worker Thread ("Gossiper")** – Uses a `FixedThreadPool` to distribute messages.
 
-✅ **Encerramento correto da aplicação** – O cliente detecta quando o servidor fecha e encerra corretamente. 
+✅ **Proper application shutdown** – Clients detect when the server goes offline and terminate gracefully.
 
-✅ **Armazenamento de participantes** – Lista concorrente para evitar problemas de sincronização. 
+✅ **Participant list storage** – Uses a concurrent-safe list to avoid synchronization issues.
 
-✅ **Logs estruturados** – Utilizando `Logger` com níveis `INFO`, `FINE` e `SEVERE`. 
+✅ **Structured logging** – Uses `Logger` with `INFO`, `FINE`, and `SEVERE` levels.
 
-✅ **Comandos Especiais** – Comandos para melhorar a experiência do usuário.
+✅ **Special Commands** – Useful commands to enhance user experience.
 
-## 📥 Como Executar
+## 📥 How to Run
 
-### **1️⃣ Executando com JAR**
+### **1️⃣ Running with JAR**
 
-- **Servidor:**
+- **Server:**
   ```bash
-  java -jar Servidor.jar
-  ```
-- **Cliente:**
-  ```bash
-  java -jar Cliente.jar <IP_SERVIDOR> <APELIDO>
-  ```
-  Exemplo:
-  ```bash
-  java -jar Cliente.jar 127.0.0.1 Joao
+  java -jar ChatServer.jar
   ```
 
-### **2️⃣ Executando via Código-Fonte**
+- **Client:**
+  ```bash
+  java -jar Client.jar <SERVER_IP> <NICKNAME>
+  ```
+  Example:
+  ```bash
+  java -jar Client.jar 127.0.0.1 Joao
+  ```
 
-1. **Compilar os arquivos:**
+### **2️⃣ Running from Source Code**
+
+1. **Compile the source files:**
    ```bash
    javac -d bin src/server/*.java src/client/*.java
    ```
-2. **Iniciar o servidor:**
+
+2. **Start the server:**
    ```bash
-   java -cp bin server.Servidor
-   ```
-3. **Iniciar um cliente:**
-   ```bash
-   java -cp bin client.Cliente 127.0.0.1 Joao
+   java -cp bin server.ChatServer
    ```
 
-## 🔥 Comandos Especiais Disponíveis
-
-Dentro do chat, os usuários podem utilizar comandos especiais:
-
-| Comando     | Descrição                                   |
-| ----------- | ------------------------------------------- |
-| `/usuarios` | Lista todos os usuários conectados ao chat. |
-| `/limpar`   | Limpa a tela do terminal.                   |
-| `/ajuda`    | Exibe a lista de comandos disponíveis.      |
-| `##sair##`  | Sai do chat e desconecta do servidor.       |
-
-## ✨ Exemplo de Funcionamento do Chat
-
-### **1️⃣ Iniciando o Servidor**
+3. **Start a client:**
    ```bash
-   java -jar Servidor.jar
-   ```
-   **Saída esperada no console do servidor:**
-   ```bash
-   Servidor iniciado na porta 50123
-   Aguardando conexões de clientes...
+   java -cp bin client.Client 127.0.0.1 Joao
    ```
 
-### **2️⃣ Conectando Clientes**
-   ```bash
-   java -jar Cliente.jar 127.0.0.1 Joao
-   java -jar Cliente.jar 127.0.0.1 Maria
-   java -jar Cliente.jar 127.0.0.1 Pedro
-   ```
-   **Saída esperada no chat dos clientes**
-   ```bash
-   Joao entrou no chat.
-   Maria entrou no chat.
-   Pedro entrou no chat.
-   ```
+## 🔥 Available Special Commands
 
-### **3️⃣ Enviando Mensagens**
-   **Joao envia:**
-   ```bash
-   Oi pessoal!
-   ```
-   **Maria e Pedro veem:**
-   ```bash
-   17/02/2025 19:10 (Joao) - Oi pessoal!
-   ```
+Inside the chat, users can use the following commands:
 
-### **4️⃣ Listando Usuários Conectados**
-   **Maria digita `/usuarios` e vê:**
-   ```bash
-   Usuários conectados:
-   - Joao
-   - Maria
-   - Pedro
-   ```
+| Command       | Description                                      |
+| ------------- | ------------------------------------------------ |
+| `/users`   | Lists all currently connected users.             |
+| `/clear`     | Clears the terminal screen.                      |
+| `/help`      | Shows the list of available commands.            |
+| `##quit##`    | Exits the chat and disconnects from the server.  |
 
-### **4️⃣ Limpando o Terminal**
-  **João digita `/limpar`, e o terminal é limpo.**
+## ✨ Example Chat Output
 
-### **4️⃣ Saindo do Chat**
-   **Pedro digita `##sair##`, e os outros veem:**
-   ```bash
-   Pedro saiu do chat.
-   ```
+### **1️⃣ Starting the Server**
+```bash
+java -jar ChatServer.jar
+```
+**Expected server output:**
+```bash
+Server started on port 50123
+Waiting for client connections...
+```
 
-## 📜 Logs no Servidor
+### **2️⃣ Connecting Clients**
+```bash
+java -jar Client.jar 127.0.0.1 Joao
+java -jar Client.jar 127.0.0.1 Maria
+java -jar Client.jar 127.0.0.1 Pedro
+```
+**Expected chat output:**
+```bash
+Joao joined the chat.
+Maria joined the chat.
+Pedro joined the chat.
+```
 
-O servidor exibe logs detalhados para depuração e monitoramento:
+### **3️⃣ Sending Messages**
+**Joao types:**
+```bash
+Hello everyone!
+```
+**Maria and Pedro see:**
+```bash
+17/02/2025 19:10 (Joao) - Hello everyone!
+```
 
-- **INFO** – Eventos principais (entrada/saída de clientes, mensagens enviadas)
-- **FINE** – Logs detalhados para depuração
-- **SEVERE** – Erros críticos
+### **4️⃣ Listing Connected Users**
+**Maria types `/usuarios` and sees:**
+```bash
+Connected users:
+- Joao
+- Maria
+- Pedro
+```
 
-## 📦 Empacotamento do Projeto em JAR
+### **5️⃣ Clearing the Terminal**
+**Joao types `/limpar` and his terminal is cleared.**
 
-Para criar os arquivos `.jar`, siga os passos:
+### **6️⃣ Leaving the Chat**
+**Pedro types `##sair##` and the others see:**
+```bash
+Pedro left the chat.
+```
+
+## 📜 Server Logging
+
+The server produces detailed logs for debugging and monitoring:
+
+- **INFO** – Main events (user join/leave, messages sent)
+- **FINE** – Debug-level details
+- **SEVERE** – Critical errors
+
+## 📦 Packaging the Project as JAR
+
+To generate the `.jar` files, use:
 
 ```bash
 javac -d bin src/server/*.java src/client/*.java
-jar cfe Servidor.jar server.Servidor -C bin .
-jar cfe Cliente.jar client.Cliente -C bin .
+jar cfe Server.jar server.Server -C bin .
+jar cfe Client.jar client.Client -C bin .
 ```
 
-## 📌 Conclusão
+## 📌 Conclusion
 
-Este projeto implementa um **chat funcional em Java utilizando sockets**, garantindo concorrência, estabilidade e interatividade para os usuários. Ele segue as melhores práticas de programação concorrente e estruturação de código. 🚀
+This project demonstrates a fully functional **Java socket-based chat application**, ensuring concurrency, stability, and real-time communication between users. It follows best practices in concurrent programming and clean code design. 🚀
 
-📌 **Criado para a disciplina de Fundamentos de Programação Concorrente.**
-
+📌 **Built for the Concurrent Programming Fundamentals course.**
